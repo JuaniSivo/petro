@@ -1,0 +1,31 @@
+[build-system]
+requires = ["setuptools>=61"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "petro"
+version = "0.1.0"
+requires-python = ">=3.11"
+description = "Petroleum engineering calculations built on quantia"
+readme = "README.md"
+license = { file = "LICENSE" }
+authors = [{ name = "Juan Ignacio Sivori" }]
+keywords = ["petroleum", "reservoir", "pvt", "dca", "material balance"]
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+]
+dependencies = [
+    "quantia>=0.2.1",
+]
+
+[project.optional-dependencies]
+bayes = ["pymc>=5.0"]
+dev   = ["pytest"]
+
+[tool.setuptools.packages.find]
+where = ["."]
+
+[tool.pytest.ini_options]
+pythonpath = ["."]

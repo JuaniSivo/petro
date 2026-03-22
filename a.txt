@@ -1,0 +1,42 @@
+# Initialise repo
+git init petro && cd petro
+git checkout -b main
+
+# Initial skeleton commit
+touch README.md LICENSE
+mkdir -p petro/_utils tests
+touch petro/__init__.py petro/_utils/__init__.py tests/__init__.py
+git add .
+git commit -m "chore: initialise petro repo skeleton"
+
+# Branch for iteration 0
+git checkout -b dev
+git checkout -b iter0/infrastructure
+
+# Write files, then:
+git add petro/_utils/dispatch.py
+git commit -m "feat(_utils): add dispatch utilities
+
+_is_prob, _most_uncertain, _coerce, _n_samples, _as_samples, _wrap.
+These are the foundation of the type-dispatch pattern used by every
+correlation and module in the library."
+
+git add pyproject.toml
+git commit -m "chore: add pyproject.toml with quantia dependency"
+
+git add tests/test_dispatch.py
+git commit -m "test(_utils): add dispatch unit tests (18 cases)"
+
+# Merge up
+git checkout dev
+git merge --no-ff iter0/infrastructure -m "iter0: dispatch utilities"
+
+git checkout -b test
+git merge --no-ff dev -m "test: iter0 dispatch"
+
+git checkout main
+git merge --no-ff test -m "release: iter0 foundation"
+git tag v0.1.0
+
+# Install locally so petro-app can use it
+pip install -e .

@@ -145,3 +145,40 @@ def test_wrap_roundtrip_pattern(uf_m, puf_s):
     assert isinstance(result, qu.ProbUnitFloat)
     assert result._n == 200
     assert result.mean().value == pytest.approx(100.0, rel=0.1)
+
+
+# ── Temperature (AffineUnit) coercion ─────────────────────────────────────────
+# Standing uses °F internally. Reservoir temperature is often entered in °C.
+# _coerce must handle the affine path via quantia's .to().
+
+def test_coerce_celsius_to_fahrenheit():
+    t_c = qu.Q(100.0, "°C")
+    t_f = _coerce(t_c, "°F")
+    assert isinstance(t_f, qu.UnitFloat)
+    assert t_f.value == pytest.approx(212.0, rel=1e-5)
+
+def test_coerce_fahrenheit_to_kelvin():
+    t_f = qu.Q(32.0, "°F")
+    t_k = _coerce(t_f, "K")
+    assert t_k.value == pytest.approx(273.15, rel=1e-5)
+
+def test_coerce_prob_celsius_to_fahrenheit():
+    with qu.config(seed=0, n_samples=200):
+        t_c = qu.ProbUnitFloat.uniform(80.0, 120.0, "°C")
+    t_f = _coerce(t_c, "°F")
+    assert isinstance(t_f, qu.ProbUnitFloat)
+    assert t_f._n == 200
+    # All samples should be in [176, 248] °F
+    assert all(176.0 <= s <= 248.0 for s in t_f._samples)
+
+def test_as_samples_celsius_to_fahrenheit():
+    t_c = qu.Q(100.0, "°C")
+    vals = _as_samples(t_c, "°F", 3)
+    assert vals == pytest.approx([212.0, 212.0, 212.0], rel=1e-5)
+
+def test_as_samples_prob_celsius_to_fahrenheit():
+    with qu.config(seed=0, n_samples=100):
+        t_c = qu.ProbUnitFloat.uniform(80.0, 120.0, "°C")
+    vals = _as_samples(t_c, "°F", 100)
+    assert len(vals) == 100
+    assert all(176.0 <= v <= 248.0 for v in vals)

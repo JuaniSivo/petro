@@ -29,10 +29,10 @@ from petro.pvt.correlations import (
     z_hall_yarborough, z_papay, oil_compressibility,
     oil_viscosity_dead, oil_viscosity_saturated, gas_viscosity,
 )
-from petro.pvt.curves import (
-    rs_standing_curve, bo_standing_curve, bg_curve,
-    oil_viscosity_saturated_curve, gas_viscosity_curve,
-)
+# from petro.pvt.curves import (
+#     rs_standing_curve, bo_standing_curve, bg_curve,
+#     oil_viscosity_saturated_curve, gas_viscosity_curve,
+# )
 
 
 @dataclass
